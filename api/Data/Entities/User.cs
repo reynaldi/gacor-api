@@ -10,10 +10,13 @@ namespace GacorAPI.Data.Entities
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public DateTime? LastLogin { get; set; }
         public bool IsActive { get; set; }
 
-        public IList<Blog> Blogs { get; set; }
-        public IList<Comment> Comments { get; set; }
+        public virtual IList<Blog> Blogs { get; set; }
+        public virtual IList<Comment> Comments { get; set; }
     }
 }

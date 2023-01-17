@@ -10,6 +10,6 @@ namespace GacorAPI.Data.Entities
         [Required]
         public string Title { get; set; }
         public string Body { get; set; }
-        public User Creator { get; set; }
+        public virtual User Creator { get; set; }
     }
 }

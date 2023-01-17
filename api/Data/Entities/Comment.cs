@@ -9,6 +9,6 @@ namespace GacorAPI.Data.Entities
         public long BlogId { get; set; }
         public string Body { get; set; }
 
-        public User Commenter { get; set; }
+        public virtual User Commenter { get; set; }
     }
 }
