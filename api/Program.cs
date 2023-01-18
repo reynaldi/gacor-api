@@ -1,6 +1,7 @@
 using GacorAPI.Data;
 using GacorAPI.Data.Seed;
 using GacorAPI.Data.Uow;
+using GacorAPI.Domain.UserDom;
 using GacorAPI.Infra;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ var config = ConfigHelper.GetConfig();
 var mysqlVersion = new MySqlServerVersion(new Version(5,7));
 builder.Services.AddDbContext<GacorContext>(options => options.UseMySql(config.ConnectionString, mysqlVersion));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

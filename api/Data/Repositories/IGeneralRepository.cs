@@ -14,6 +14,8 @@ namespace GacorAPI.Data.Repositories
             Func<IQueryable<TEntity>, IOrderedEnumerable<TEntity>> orderBy = null,
             string include = ""
             );
+        TEntity GetOne(Expression<Func<TEntity, bool>> filter = null);
+        Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> filter = null);
         TEntity GetById(long id);
         Task<TEntity> GetByIdAsync(long id);
         void Insert(TEntity entity);

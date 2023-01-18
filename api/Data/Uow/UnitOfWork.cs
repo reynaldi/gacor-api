@@ -1,3 +1,4 @@
+using System.Transactions;
 using GacorAPI.Data.Entities;
 using GacorAPI.Data.Repositories;
 
@@ -9,6 +10,7 @@ namespace GacorAPI.Data.Uow
         private IGeneralRepository<Blog> _blogRepository;
         private IGeneralRepository<Comment> _commentRepository;
         private IGeneralRepository<User> _userRepository;
+        private TransactionScope _transaction;
         private bool _disposed = false;
 
         public UnitOfWork(GacorContext context)
@@ -68,6 +70,21 @@ namespace GacorAPI.Data.Uow
                 _userRepository = new GeneralRepository<User>(_context);
             }
             return _userRepository;
+        }
+
+        public void StartTransaction()
+        {
+            _transaction = new TransactionScope();
+        }
+
+        public void CompleteTransaction()
+        {
+            _transaction.Complete();                        
+        }
+
+        public void DisposeTransaction()
+        {
+            _transaction.Dispose();
         }
     }
 }

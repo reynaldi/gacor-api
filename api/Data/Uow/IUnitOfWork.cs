@@ -10,5 +10,8 @@ namespace GacorAPI.Data.Uow
         IGeneralRepository<Comment> CommentRepository();
         void Save();
         Task SaveAsync();
+        void StartTransaction();
+        void CompleteTransaction();
+        void DisposeTransaction();
     }
 }

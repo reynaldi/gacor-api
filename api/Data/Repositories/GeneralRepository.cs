@@ -87,6 +87,24 @@ namespace GacorAPI.Data.Repositories
             return await _dbSet.FindAsync(id);
         }
 
+        public TEntity GetOne(Expression<Func<TEntity, bool>> filter = null)
+        {
+            if(filter != null)
+            {
+               return _dbSet.FirstOrDefault(filter);                
+            }
+            return _dbSet.FirstOrDefault();
+        }
+
+        public async Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> filter = null)
+        {
+            if(filter != null)
+            {
+                return await _dbSet.FirstOrDefaultAsync(filter);
+            }
+            return await _dbSet.FirstOrDefaultAsync();
+        }
+
         public void Insert(TEntity entity)
         {
             _dbSet.Add(entity);

@@ -1,4 +1,5 @@
 using GacorAPI.Domain.UserDom.Dto;
+using GacorAPI.Infra.Errors;
 
 namespace GacorAPI.Domain.UserDom
 {
@@ -9,6 +10,6 @@ namespace GacorAPI.Domain.UserDom
         /// </summary>
         /// <param name="data">User data</param>
         /// <returns></returns>
-        Task CreateUser(UserDto data);
+        Task<ErrorBusiness> CreateUser(UserDto data);
     }
 }
