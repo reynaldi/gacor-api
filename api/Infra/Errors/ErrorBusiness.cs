@@ -9,6 +9,7 @@ namespace GacorAPI.Infra.Errors
     public enum ErrorCode
     {
         UserAlreadyRegistered = 1,
+        UserNotFound
     }
 
     public static class ErrorGenerator
@@ -28,6 +29,8 @@ namespace GacorAPI.Infra.Errors
             {
                 case ErrorCode.UserAlreadyRegistered:
                     return "User already registered";
+                case ErrorCode.UserNotFound:
+                    return "User not found";
                 default:
                     return "";
             }

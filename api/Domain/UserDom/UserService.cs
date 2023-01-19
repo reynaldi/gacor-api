@@ -1,4 +1,3 @@
-using System.Transactions;
 using GacorAPI.Data.Entities;
 using GacorAPI.Data.Uow;
 using GacorAPI.Domain.UserDom.Dto;
@@ -44,6 +43,50 @@ namespace GacorAPI.Domain.UserDom
                 _uow.DisposeTransaction();
                 throw;
             }
+        }
+
+        public async Task<ErrorBusiness> EditUser(UserDto data)
+        {
+            var user = await _uow.UserRepository().GetByIdAsync(data.Id);
+            if(user == null) return ErrorGenerator.Generate(ErrorCode.UserNotFound);
+            try
+            {
+                _uow.StartTransaction();
+                user.FirstName = data.FirstName;
+                user.LastName = data.LastName;
+                await _uow.UserRepository().UpdateAsync(user);
+                await _uow.SaveAsync();
+                _uow.CompleteTransaction();
+                _uow.DisposeTransaction();
+                return null;
+            }
+            catch (System.Exception)
+            {
+                _uow.DisposeTransaction();
+                throw;
+            }
+            
+        }
+
+        public async Task<Tuple<UserDto, ErrorBusiness>> GetUserProfile(string email)
+        {
+            var result = await _uow.UserRepository().GetOneAsync(e => email.ToLower() == e.Email.ToLower());
+            if(result == null)
+            {
+                return new Tuple<UserDto, ErrorBusiness>(null, ErrorGenerator.Generate(ErrorCode.UserNotFound));
+            }
+            return new Tuple<UserDto, ErrorBusiness>(mapUser(result), null);
+        }
+
+        private UserDto mapUser(User user)
+        {
+            return new UserDto
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Id = user.Id,
+            };
         }
     }
 }

@@ -100,5 +100,101 @@ namespace GacorApi.Tests.UserDom
             Assert.IsType<Exception>(ex);
             mock.Verify(_ => _.DisposeTransaction(), Times.Once);
         }
+
+        [Fact]
+        public async Task GetUserProfile_Valid()
+        {
+            // arrange
+            var mockRepo = new Mock<IGeneralRepository<User>>();
+            var mockUow = new Mock<IUnitOfWork>();
+            mockRepo.Setup(x => x.GetOneAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(new User 
+            { 
+                Email = "reynaldi.surya@gmail.com",
+                Id = 1,
+                FirstName = "Reynaldi",
+                LastName = "Surya",                
+            });
+            mockUow.Setup(_ => _.UserRepository()).Returns(mockRepo.Object);
+
+            // act
+            var service = new UserService(mockUow.Object);
+            var result = await service.GetUserProfile("reynaldi.surya@gmail.com");
+
+            // assert
+            Assert.NotNull(result.Item1);
+            Assert.Equal("reynaldi.surya@gmail.com", result.Item1.Email);
+        }
+
+        [Fact]
+        public async Task GetUserProfile_UserNotFound()
+        {
+            // arrange
+            var mockRepo = new Mock<IGeneralRepository<User>>();
+            var mockUow = new Mock<IUnitOfWork>();
+            mockRepo.Setup(x => x.GetOneAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(value: null as User);
+            mockUow.Setup(_ => _.UserRepository()).Returns(mockRepo.Object);
+
+            // act
+            var service = new UserService(mockUow.Object);
+            var result = await service.GetUserProfile("reynaldi.surya@gmail.com");
+
+            // assert
+            Assert.NotNull(result.Item2);
+            Assert.Equal("User not found", result.Item2.Message);
+        }
+
+        [Fact]
+        public async Task EditUser_Valid()
+        {
+            // arrange
+            var mockRepo = new Mock<IGeneralRepository<User>>();
+            var mockUow = new Mock<IUnitOfWork>();
+
+            mockRepo.Setup(_ => _.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(new User
+            {
+                Id = 1,
+                FirstName = "Reynaldi",
+                LastName = "Surya",
+                Email = "reynaldi.surya@gmail.com",
+                IsActive = true
+            });
+            mockUow.Setup(_ => _.UserRepository()).Returns(mockRepo.Object);
+
+            // act
+            var service = new UserService(mockUow.Object);
+            var result = await service.EditUser(new UserDto
+            { 
+                FirstName = "reynaldi testt",
+                LastName = "Surya tess",
+                Id = 1
+            });
+
+            // assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task EditUser_NotFound()
+        {
+            // arrange
+            var mockRepo = new Mock<IGeneralRepository<User>>();
+            var mockUow = new Mock<IUnitOfWork>();
+
+            mockRepo.Setup(_ => _.GetByIdAsync(It.IsAny<long>())).ReturnsAsync(value: null as User);
+            mockUow.Setup(_ => _.UserRepository()).Returns(mockRepo.Object);
+
+            // act
+            var service = new UserService(mockUow.Object);
+            var result = await service.EditUser(new UserDto
+            { 
+                FirstName = "reynaldi testt",
+                LastName = "Surya tess",
+                Id = 1
+            });
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal("User not found", result.Message);
+        }
     }
 }

@@ -11,5 +11,8 @@ namespace GacorAPI.Domain.UserDom
         /// <param name="data">User data</param>
         /// <returns></returns>
         Task<ErrorBusiness> CreateUser(UserDto data);
+
+        Task<Tuple<UserDto, ErrorBusiness>> GetUserProfile(string email);
+        Task<ErrorBusiness> EditUser(UserDto data);
     }
 }
